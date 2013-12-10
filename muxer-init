@@ -1,0 +1,27 @@
+#!/bin/sh
+[ -n "$MUXER_DEBUG" ] && set -x
+
+banner() { echo "-----> $*"; }
+
+cat <<_PROFILE_ > /tmp/muxer.sh
+alias exit="tmux detach-client"
+source /etc/profile
+source ~/.profile
+_PROFILE_
+chmod +x /tmp/muxer.sh
+
+banner "Starting tmux session"
+/usr/bin/sudo -i -u muxer \
+  /usr/bin/tmux -S /tmp/muxer new-session -d -s muxer \
+  "bash --rcfile /tmp/muxer.sh"
+
+banner "Generating sshd server keys"
+ssh-keygen -q -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+ssh-keygen -q -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
+ssh-keygen -q -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa
+
+banner "Final cleanup"
+rm -f /tmp/muxer.sh
+
+banner "Starting sshd"
+exec /usr/sbin/sshd -D $*
