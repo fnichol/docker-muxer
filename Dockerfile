@@ -20,7 +20,7 @@ RUN apt-get install -y sudo && echo '%muxer ALL=(ALL) NOPASSWD:ALL' > /etc/sudoe
 RUN groupadd muxer
 RUN useradd -d /home/muxer -g muxer -m -s /bin/bash muxer && passwd --lock muxer && chmod 0700 /home/muxer
 
-RUN apt-get install -y curl emacs less man-db nano tmux tree vim
+RUN apt-get install -y autoconf bison build-essential curl git emacs less man-db mercurial nano netcat-openbsd telnet tmux tree vim
 RUN apt-get -y autoremove
 
 ADD profile_d_muxer.sh /etc/profile.d/zzz_muxer.sh
