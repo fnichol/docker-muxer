@@ -24,7 +24,7 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 120
-PermitRootLogin no
+PermitRootLogin without-password
 StrictModes yes
 
 RSAAuthentication yes
@@ -88,4 +88,5 @@ UsePAM no
 
 UseDNS no
 
-ForceCommand /usr/bin/tmux -S /tmp/muxer attach -t muxer
+Match User *,!root
+  ForceCommand /usr/bin/tmux -S /tmp/muxer attach -t muxer
