@@ -9,7 +9,7 @@ RUN apt-get update
 
 RUN locale-gen en_US en_US.UTF-8
 
-RUN apt-get install -y autoconf bison build-essential curl git emacs less man-db mercurial nano netcat-openbsd telnet tmux tree vim
+RUN apt-get install -y autoconf bison build-essential curl git emacs less man-db mercurial nano netcat-openbsd telnet tree vim
 
 RUN apt-get install -y openssh-server && mkdir -p /var/run/sshd && rm -f /etc/ssh/ssh_host_*
 
@@ -18,11 +18,17 @@ RUN apt-get install -y sudo && echo '%muxer ALL=(ALL) NOPASSWD:ALL' > /etc/sudoe
 RUN groupadd muxer
 RUN useradd -d /home/muxer -g muxer -m -s /bin/bash muxer && passwd --lock muxer && chmod 0700 /home/muxer
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 63844AC3 && \
-  echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list && \
-  echo "deb http://ppa.launchpad.net/kalakris/tmux/ubuntu precise main" >> /etc/apt/sources.list && \
-  apt-get update && \
-  apt-get install -y tmux
+ENV TMUX_VERSION 1.9a
+RUN apt-get install -y libevent-dev libncurses5-dev gcc make && \
+  curl -L -o /tmp/tmux.tar.gz http://downloads.sourceforge.net/tmux/tmux-${TMUX_VERSION}.tar.gz && \
+  mkdir -p /tmp/tmux && \
+  cd /tmp/tmux && \
+  tar xfz /tmp/tmux.tar.gz --strip-components=1 && \
+  ./configure && \
+  make && \
+  make install && \
+  ln -snf /usr/local/bin/tmux /usr/bin/tmux && \
+  rm -rf /tmp/tmux.tar.gz /tmp/tmux
 
 RUN apt-get -y autoremove
 
