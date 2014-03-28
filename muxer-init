@@ -12,7 +12,7 @@ chmod +x /tmp/muxer.sh
 
 banner "Starting tmux session"
 /usr/bin/sudo -i -u muxer \
-  /usr/bin/tmux -S /tmp/muxer new-session -d -s muxer \
+  /usr/bin/tmux -S /tmp/muxer -u new-session -d -s muxer \
   "bash --rcfile /tmp/muxer.sh"
 
 banner "Generating sshd server keys"
